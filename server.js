@@ -35,9 +35,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/artists', getArtists);
-app.post('/artists', getArtists);
-app.delete('/artists/:id', getArtists);
-app.put('/artists/:id', getArtists);
+app.post('/artists', postArtists);
+app.delete('/artists/:id', deleteArtists);
+app.put('/artists/:id', putArtists);
 
 
 app.get('*', (request, response) => {
@@ -53,6 +53,7 @@ async function getArtists(req, res, next) {
     }
     let results = await Artists.find(queryObject);
     res.status(200).send(results);
+    console.log(`Results: ${results}`);
   } catch(error) {
     next(error);
   }
@@ -62,6 +63,7 @@ async function postArtists(req,res,next) {
   try {
     let createdSearch = await Artists.create(req.body);
     res.status(200).send(createdSearch);
+    console.log(`Added: ${createdSearch}`)
   } catch(error) {
     next(error);
   }
@@ -72,6 +74,7 @@ async function deleteArtists(req,res,next) {
   try {
     await Artists.findByIdAndDelete(id);
     res.send('Artists deleted');
+    console.log(`${id} Deleted`)
   } catch(error) {
     next(error);
   }
@@ -82,6 +85,7 @@ async function putArtists(req,res,next) {
     let id = req.params.id;
     let updatedArtists = await Artists.findByIdAndUpdate(id, req.body, { new: true, overwrite: true});
     res.status(200).send(updatedArtists);
+    console.log(`Updated: ${updatedArtists}`)
   } catch(error) {
     next(error);
   }
