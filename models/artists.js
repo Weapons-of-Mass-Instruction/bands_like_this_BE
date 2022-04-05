@@ -17,7 +17,6 @@ const artistsSchema = new Schema({
   search: {type: String, require: true},
   name: {type: String, require: true},
   genre: {type: String, require: true},
-  match: {type: Number, require: true},
   img: {type: String},
   favorite: {type: Boolean, require: true}
 });
@@ -26,3 +25,30 @@ const artistsSchema = new Schema({
 const ArtistModel = mongoose.model('Artists', artistsSchema);
 
 module.exports = ArtistModel;
+
+/*
+[
+{
+  search: "The Smiths",
+  name: "The Clash",
+  genre: "punk",
+  img: "OH LOOK A URL",
+  favorite: false
+}
+{
+  search: "The Smiths",
+  name: "another Band",
+  genre: "po punk",
+  img: "OH LOOK A URL",
+  favorite: false
+}
+
+
+
+
+
+]
+
+
+
+*/
