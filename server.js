@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const searchArtists = require('./modules/masterapi.js')
 
 // connect mongoose to our MongoDB
 mongoose.connect(process.env.DB_URL);
@@ -90,6 +91,8 @@ async function putArtists(req,res,next) {
     next(error);
   }
 }
+
+searchArtists();
 
 // error
 app.use((error ,req, res, next) => {
