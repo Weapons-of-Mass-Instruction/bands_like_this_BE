@@ -5,7 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const searchArtists = require('./modules/masterapi.js')
+const searchArtists = require('./modules/masterapi.js');
 
 // connect mongoose to our MongoDB
 mongoose.connect(process.env.DB_URL);
@@ -40,6 +40,7 @@ app.post('/artists', postArtists);
 app.delete('/artists/:id', deleteArtists);
 app.put('/artists/:id', putArtists);
 
+//////////////// app.get('./modules/masterapi.js', searchArtists);
 
 app.get('*', (request, response) => {
   response.status(404).send('These are not the pages you are looking for...');
