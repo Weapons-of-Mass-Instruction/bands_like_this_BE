@@ -4,8 +4,9 @@ const LASTFM_KEY = process.env.LASTFM_API_KEY;
 const MUSICOVERY_API_KEY = process.env.MUSICOVERY_API_KEY;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-async function searchArtists(req, res, next) {
-  let searchQuery = 'nickleback';
+async function searchArtists(searchQuery) { //(req, res, next)
+  // let searchQuery = searchQuery;
+  // let searchQuery = 'nickleback';
   //id's for bands
   let musicBrainzIDUrl = `https://musicbrainz.org/ws/2/artist/?query=${searchQuery}&fmt=json`;
   //the axios search of our band
@@ -37,8 +38,12 @@ async function searchArtists(req, res, next) {
     recsArr[i].searchQuery = searchQuery;
   }
   let results = new Bands(recsArr);
+  // console.log(`ResultsFromMaster:`);
+  // console.log(results)
+  // console.log(`recsArr:`);
+  // console.log(recsArr);
+  return results;
 
-  console.log(results);
 }
 
 class Bands {
