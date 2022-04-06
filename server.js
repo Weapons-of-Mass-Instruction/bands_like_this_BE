@@ -36,6 +36,7 @@ app.get('/', (request, response) => {
 })
 
 app.get('/artists', getArtists);
+app.get('/artist', getApiArtists)
 app.post('/artists', postArtists);
 app.delete('/artists/:id', deleteArtists);
 app.put('/artists/:id', putArtists);
@@ -57,46 +58,68 @@ async function getArtists(req, res, next) {
     let results = await Artists.find(queryObject);
     res.status(200).send(results);
     console.log(`Results: ${results}`);
-  } catch(error) {
+  } catch (error) {
     next(error);
   }
 }
 
-async function postArtists(req,res,next) {
+//uses the user searchQuery to call api's with searchArtists() and POST them in the db. It will also respond to the front end with the newly added data.
+async function getApiArtists(req, res, next) {
   try {
-    let createdSearch = await Artists.create(req.body);
+    let searched = await searchArtists(req.query.searchQuery);
+    console.log('Searched:');
+    console.log(searched);
+    let createdSearch = await Artists.create(searched.recsParsed);
+    // let createdSearch = await searched.map(band => {
+    //   Artists.create(band);
+    // })
     res.status(200).send(createdSearch);
-    console.log(`Added: ${createdSearch}`)
-  } catch(error) {
+  }
+  catch (error) {
     next(error);
   }
 }
 
-async function deleteArtists(req,res,next) {
+//FIXME: need to decide on functionality
+async function postArtists(req, res, next) {
+  try {
+    // let searched = searchArtists(req.query.searchQuery);
+    // // let createdSearch = await Artists.create(searched);
+    // let createdSearch = await searched.map(band => {
+    //   Artists.create(band);
+    // })
+    // res.status(200).send(createdSearch);
+    console.log(`Added: ${createdSearch}`)
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteArtists(req, res, next) {
   let id = req.params.id;
   try {
     await Artists.findByIdAndDelete(id);
     res.send('Artists deleted');
     console.log(`${id} Deleted`)
-  } catch(error) {
+  } catch (error) {
     next(error);
   }
 }
 
-async function putArtists(req,res,next) {
+async function putArtists(req, res, next) {
   try {
     let id = req.params.id;
-    let updatedArtists = await Artists.findByIdAndUpdate(id, req.body, { new: true, overwrite: true});
+    let updatedArtists = await Artists.findByIdAndUpdate(id, req.body, { new: true, overwrite: true });
     res.status(200).send(updatedArtists);
     console.log(`Updated: ${updatedArtists}`)
-  } catch(error) {
+  } catch (error) {
     next(error);
   }
 }
 
 
 // error
-app.use((error ,req, res, next) => {
+app.use((error, req, res, next) => {
   res.status(500).send(error.message);
 })
 
