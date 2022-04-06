@@ -1,6 +1,7 @@
 'use strict';
 const axios = require('axios');
-const LASTFM_KEY = process.env.LASTFM_API_KEY
+const LASTFM_KEY = process.env.LASTFM_API_KEY;
+const MUSICOVERY_API_KEY = process.env.MUSICOVERY_API_KEY;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 async function searchArtists(req, res, next) {
@@ -11,7 +12,7 @@ async function searchArtists(req, res, next) {
   let searchedBandID = await axios.get(musicBrainzIDUrl)
   //the specific results for our first artist searched
   let bandId = searchedBandID.data.artists[0].id;
-  let musicoveryRecsUrl = `http://musicovery.com/api/V6/artist.php?fct=getsimilar&id=${bandId}&obscureartists=true&resultsnumber=6&fmt=json`;
+  let musicoveryRecsUrl = `http://musicovery.com/api/V6/artist.php?fct=getsimilar&id=${bandId}&obscureartists=true&resultsnumber=6&fmt=json${MUSICOVERY_API_KEY}`;
 
   // async (bandId) =>
   let musicRecs = await axios.get(musicoveryRecsUrl);
@@ -52,10 +53,10 @@ class Bands {
         favorite: false,
        });
     });
-
   }
 }
 
+module.exports = searchArtists;
 
 
 // class Band {
@@ -71,7 +72,6 @@ class Bands {
 // }
 
 
-module.exports = searchArtists;
 // 1 . music brainz = search by bandName
 // get Music_Brains_ID#
 

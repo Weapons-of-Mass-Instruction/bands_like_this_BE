@@ -40,7 +40,8 @@ app.post('/artists', postArtists);
 app.delete('/artists/:id', deleteArtists);
 app.put('/artists/:id', putArtists);
 
-//////////////// app.get('./modules/masterapi.js', searchArtists);
+// app.get('./modules/masterapi.js', searchArtists);
+// searchArtists();
 
 app.get('*', (request, response) => {
   response.status(404).send('These are not the pages you are looking for...');
@@ -93,7 +94,6 @@ async function putArtists(req,res,next) {
   }
 }
 
-searchArtists();
 
 // error
 app.use((error ,req, res, next) => {
