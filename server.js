@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const searchArtists = require('./modules/masterapi.js');
+const verifyUser = require('./auth');
 
 // connect mongoose to our MongoDB
 mongoose.connect(process.env.DB_URL);
@@ -50,18 +51,28 @@ app.get('*', (request, response) => {
 
 // add/delete/edit methods
 async function getArtists(req, res, next) {
-  try {
-    let queryObject = {};
-    if (req.query.search) {
-      queryObject.search = req.query.search;
+
+  verifyUser(req, async (err, user) => {
+    if (err) {
+      console.error(err);
+      response.send('invalid token');
+    } else {
+  
+    try {
+      let queryObject = {};
+      if (req.query.search) {
+        queryObject.search = req.query.search;
+      }
+      let results = await Artists.find();
+      res.status(200).send(results);
+      console.log(`Results: ${results}`);
+    } catch (error) {
+      next(error);
     }
-    let results = await Artists.find();
-    res.status(200).send(results);
-    console.log(`Results: ${results}`);
-  } catch (error) {
-    next(error);
+    }
+    console.log(user);
   }
-}
+)}
 
 //uses the user searchQuery to call api's with searchArtists() and POST them in the db. It will also respond to the front end with the newly added data.
 async function getApiArtists(req, res, next) {
