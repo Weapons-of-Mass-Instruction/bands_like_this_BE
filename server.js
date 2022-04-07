@@ -36,7 +36,7 @@ app.get('/', (request, response) => {
 })
 
 app.get('/artists', getArtists);
-app.get('/artist', getApiArtists)
+app.get('/artist', getApiArtists); // this search makes all the API calls
 app.post('/artists', postArtists);
 app.delete('/artists/:id', deleteArtists);
 app.put('/artists/:id', putArtists);
@@ -55,7 +55,7 @@ async function getArtists(req, res, next) {
     if (req.query.search) {
       queryObject.search = req.query.search;
     }
-    let results = await Artists.find(queryObject);
+    let results = await Artists.find();
     res.status(200).send(results);
     console.log(`Results: ${results}`);
   } catch (error) {
@@ -70,9 +70,7 @@ async function getApiArtists(req, res, next) {
     console.log('Searched:');
     console.log(searched);
     let createdSearch = await Artists.create(searched.recsParsed);
-    // let createdSearch = await searched.map(band => {
-    //   Artists.create(band);
-    // })
+    
     res.status(200).send(createdSearch);
   }
   catch (error) {

@@ -50,13 +50,13 @@ class Bands {
   constructor(recsArr) {
     this.recsParsed = [];
     recsArr.forEach(band => {
-      this.recsParsed.push({ 
+      this.recsParsed.push({
         search: band.searchQuery,
         name: band.name,
         genre: band.genre,
         img: band.img,
         favorite: false,
-       });
+      });
     });
   }
 }
