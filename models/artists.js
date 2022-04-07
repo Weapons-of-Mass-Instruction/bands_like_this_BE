@@ -14,11 +14,11 @@ const { Schema } = mongoose;
 // userid or email - auth0
 
 const artistsSchema = new Schema({
-  search: {type: String, require: true},
-  name: {type: String, require: true},
-  genre: {type: String, require: true},
-  img: {type: String},
-  favorite: {type: Boolean, require: true}
+  search: { type: String, require: true },
+  name: { type: String, require: true },
+  genre: { type: String, require: true },
+  img: { type: String },
+  favorite: { type: Boolean, require: true }
 });
 
 
