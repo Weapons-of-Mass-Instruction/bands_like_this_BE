@@ -5,6 +5,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const searchArtists = require('./modules/masterapi.js');
+const verifyUser = require('./auth');
 
 // connect mongoose to our MongoDB
 mongoose.connect(process.env.DB_URL);
@@ -35,9 +37,10 @@ app.get('/', (request, response) => {
 })
 
 app.get('/artists', getArtists);
-app.post('/artists', getArtists);
-app.delete('/artists/:id', getArtists);
-app.put('/artists/:id', getArtists);
+app.get('/artist', getApiArtists); // this search makes all the API calls
+app.post('/artists', postArtists);
+app.delete('/artists/:id', deleteArtists);
+app.put('/artists/:id', putArtists);
 
 
 app.get('*', (request, response) => {
@@ -46,49 +49,76 @@ app.get('*', (request, response) => {
 
 // add/delete/edit methods
 async function getArtists(req, res, next) {
-  try {
-    let queryObject = {};
-    if (req.query.search) {
-      queryObject.search = req.query.search;
+
+  verifyUser(req, async (err, user) => {
+    if (err) {
+      console.error(err);
+      response.send('invalid token');
+    } else {
+    try {
+      let queryObject = {};
+      if (req.query.search) {
+        queryObject.search = req.query.search;
+      }
+      let results = await Artists.find();
+      res.status(200).send(results);
+      console.log(`Results: ${results}`);
+    } catch (error) {
+      next(error);
     }
-    let results = await Artists.find(queryObject);
-    res.status(200).send(results);
-  } catch(error) {
-    next(error);
+    }
+    console.log(user);
   }
-}
+)}
 
-async function postArtists(req,res,next) {
+//uses the user searchQuery to call api's with searchArtists() and POST them in the db. It will also respond to the front end with the newly added data.
+async function getApiArtists(req, res, next) {
   try {
-    let createdSearch = await Artists.create(req.body);
+    let searched = await searchArtists(req.query.searchQuery);
+    console.log('Searched:');
+    console.log(searched);
+    let createdSearch = await Artists.create(searched.recsParsed);
+    
     res.status(200).send(createdSearch);
-  } catch(error) {
+  }
+  catch (error) {
     next(error);
   }
 }
 
-async function deleteArtists(req,res,next) {
+//FIXME: need to decide on functionality
+async function postArtists(req, res, next) {
+  try {  
+  console.log(`Added: ${createdSearch}`)
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteArtists(req, res, next) {
   let id = req.params.id;
   try {
     await Artists.findByIdAndDelete(id);
     res.send('Artists deleted');
-  } catch(error) {
+    console.log(`${id} Deleted`)
+  } catch (error) {
     next(error);
   }
 }
 
-async function putArtists(req,res,next) {
+async function putArtists(req, res, next) {
   try {
     let id = req.params.id;
-    let updatedArtists = await Artists.findByIdAndUpdate(id, req.body, { new: true, overwrite: true});
+    let updatedArtists = await Artists.findByIdAndUpdate(id, req.body, { new: true, overwrite: true });
     res.status(200).send(updatedArtists);
-  } catch(error) {
+    console.log(`Updated: ${updatedArtists}`)
+  } catch (error) {
     next(error);
   }
 }
 
 // error
-app.use((error ,req, res, next) => {
+app.use((error, req, res, next) => {
   res.status(500).send(error.message);
 })
 

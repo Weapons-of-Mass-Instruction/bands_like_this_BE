@@ -2,7 +2,7 @@
 
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Artists= require('./models/artists');
+const Artists = require('./models/artists');
 mongoose.connect(process.env.DB_URL);
 
 async function seed() {
