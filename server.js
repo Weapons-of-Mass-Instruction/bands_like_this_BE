@@ -88,14 +88,8 @@ async function getApiArtists(req, res, next) {
 
 //FIXME: need to decide on functionality
 async function postArtists(req, res, next) {
-  try {
-    // let searched = searchArtists(req.query.searchQuery);
-    // // let createdSearch = await Artists.create(searched);
-    // let createdSearch = await searched.map(band => {
-    //   Artists.create(band);
-    // })
-    // res.status(200).send(createdSearch);
-    console.log(`Added: ${createdSearch}`)
+  try {  
+  console.log(`Added: ${createdSearch}`)
   } catch (error) {
     next(error);
   }
